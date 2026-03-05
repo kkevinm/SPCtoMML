@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPCtoMML", "SPCtoMML\SPCtoMML.csproj", "{3FCE41BA-7D78-4B63-9BD5-1670FA1607D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPCtoMML", "SPCtoMML.csproj", "{3FCE41BA-7D78-4B63-9BD5-1670FA1607D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
