@@ -90,6 +90,7 @@ namespace SPCtoMML
 
 		private Note[][] noteData;
 		private int[][] staccato;
+		private bool generateRemoteCmd;
 
 		/// <summary>
 		/// Current progress ratio.
@@ -101,6 +102,12 @@ namespace SPCtoMML
 			this.noteData = noteData;
 			this.tempo = defaultTempo;
 			this.insertTempo = true;
+			this.generateRemoteCmd = false;
+		}
+
+		public void SetupGenerateRemoteCmd(bool generateRemoteCmd)
+		{
+			this.generateRemoteCmd = generateRemoteCmd;
 		}
 
 		public void SetupPitch(bool tuning, bool vibrato)
@@ -326,7 +333,8 @@ namespace SPCtoMML
 				}
 
 				initChannel();
-				finalOutput.AppendFormat("#{0} ", ch);
+				finalOutput.AppendFormat("#{0}", ch);
+				finalOutput.AppendLine();
 
 				for (int l = 0; l < noteData[ch].Length; ++l)
 				{
@@ -1138,10 +1146,7 @@ namespace SPCtoMML
 
 			if (breaks > 0)
 			{
-				do
-				{
-					currentOutput.AppendLine();
-				} while (--breaks > 0);
+				currentOutput.AppendLine();
 			}
 			else
 			{
@@ -1314,9 +1319,11 @@ namespace SPCtoMML
 
 					// some inside songs can change more than one envelope at once.
 					// regardless of what happen, the last envelope change is used.
-
-					insertRemoteCommand(convertEnvelope(envelope), false);
-					insertRemoteCommand(convertEnvelope(envelope2), true);
+					if (generateRemoteCmd)
+					{
+						insertRemoteCommand(convertEnvelope(envelope), false);
+						insertRemoteCommand(convertEnvelope(envelope2), true);
+					}
 					staccato += length - trigger;
 					length = trigger;
 				}
@@ -1324,10 +1331,13 @@ namespace SPCtoMML
 			}
 			else if (currentEnvelope != envelope)
 			{
-				disableRemoteCommand();
 				currentEnvelope = envelope;
-				currentOutput.Append(convertEnvelope(currentEnvelope));
-				currentOutput.Append(' ');
+				if (generateRemoteCmd)
+				{
+					disableRemoteCommand();
+					currentOutput.Append(convertEnvelope(currentEnvelope));
+					currentOutput.Append(' ');
+				}
 			}
 		}
 

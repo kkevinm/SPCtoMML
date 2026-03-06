@@ -67,6 +67,7 @@
 			this.button4 = new System.Windows.Forms.Button();
 			this.textBox4 = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
+			this.remoteCmdCheckBox = new System.Windows.Forms.CheckBox();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -77,6 +78,18 @@
 			this.groupBox7.SuspendLayout();
 			this.groupBox8.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// remoteCmdButton
+			// 
+			this.remoteCmdCheckBox.AutoSize = true;
+			this.remoteCmdCheckBox.Checked = true;
+			this.remoteCmdCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.remoteCmdCheckBox.Location = new System.Drawing.Point(6, 65);
+			this.remoteCmdCheckBox.Name = "remoteCmdCheckBox";
+			this.remoteCmdCheckBox.Size = new System.Drawing.Size(117, 17);
+			this.remoteCmdCheckBox.TabIndex = 14;
+			this.remoteCmdCheckBox.Text = "Generate remote commands";
+			this.remoteCmdCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// button1
 			// 
@@ -347,12 +360,13 @@
 			// 
 			this.groupBox7.Controls.Add(this.checkBox4);
 			this.groupBox7.Controls.Add(this.checkBox3);
+			this.groupBox7.Controls.Add(this.remoteCmdCheckBox);
 			this.groupBox7.Location = new System.Drawing.Point(12, 188);
 			this.groupBox7.Name = "groupBox7";
-			this.groupBox7.Size = new System.Drawing.Size(177, 62);
+			this.groupBox7.Size = new System.Drawing.Size(177, 90);
 			this.groupBox7.TabIndex = 19;
 			this.groupBox7.TabStop = false;
-			this.groupBox7.Text = "Pitch";
+			this.groupBox7.Text = "Extra options";
 			// 
 			// checkBox4
 			// 
@@ -553,6 +567,7 @@
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.TextBox textBox4;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.CheckBox remoteCmdCheckBox;
 	}
 }
 

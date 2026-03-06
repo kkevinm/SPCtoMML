@@ -235,6 +235,7 @@ namespace SPCtoMML
 			mmlDumper.SetupVolume(checkBox2.Checked);
 			mmlDumper.SetupPitch(checkBox3.Checked, checkBox4.Checked);
 			mmlDumper.SetupPathSamples(textBox6.Text);
+			mmlDumper.SetupGenerateRemoteCmd(remoteCmdCheckBox.Checked);
 
 			appendLine("Tuning samples...");
 			mmlDumper.SetUpSampleMultiplier();
@@ -257,9 +258,17 @@ namespace SPCtoMML
 			SampleDumper brrDumper = new SampleDumper(dspTrace.TraceResult);
 
 			string dir = textBox5.Text + "/";
-			brrDumper.ExportBRRSamples(dir);
 
-			appendLine("All done.");
+			try
+			{
+				brrDumper.ExportBRRSamples(dir);
+				appendLine("All done.");
+			}
+			catch (Exception ex)
+			{
+				appendLine("An error occured while exporting BRR samples:");
+				appendLine(ex.Message);
+			}
 
 		end:
 			progressBar.Invoke((ThreadStart)delegate()

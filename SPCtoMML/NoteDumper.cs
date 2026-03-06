@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace SPCtoMML
 {
@@ -150,6 +151,19 @@ namespace SPCtoMML
 			}
 		}
 
+		private void handleKeyOff()
+		{
+			if (voiceActive[ch] < 0)
+			{
+				// there's no reason to process an inactive voice.
+				return;
+			}
+
+			finishCache();
+			handleNote(false);
+			resetNote();
+		}
+
 		private void mainLoop()
 		{
 			for (int i = 0x10000; i < dspTraces.Length; i += 2)
@@ -159,7 +173,7 @@ namespace SPCtoMML
 
 				if (addr >= 0x80 && addr <= 0xA0)
 				{
-					int ch = addr & 7;
+					ch = addr & 7;
 					int mode = addr & 0x18;
 					currentSampleAddress[ch] &= ~(0xFFU << mode);
 					currentSampleAddress[ch] |= (uint)value << mode;
@@ -174,7 +188,15 @@ namespace SPCtoMML
 							sampleAddresses.Add(currentSampleAddress[ch]);
 						}
 
-						currentSample[ch] = index;
+						if (currentSample[ch] != index)
+						{
+							// Simulate a key off event before switching samples to fix a bug in the MML generation later
+							// The tool does not handle switching samples in the middle of notes anyway, so this does not
+							// introduce a different behavior with respect to previous versions.
+							// NOTE: It's important this is called before updating currentSample[ch]!!
+							handleKeyOff();
+							currentSample[ch] = index;
+						}
 					}
 					continue;
 				}
@@ -282,8 +304,7 @@ namespace SPCtoMML
 								{
 									if (((value >> ch) & 1) == 0)
 									{
-										// there's no reason to process key on twice.
-										// or process a inactive voice.
+										// there's no reason to process an inactive voice.
 										continue;
 									}
 
@@ -309,16 +330,11 @@ namespace SPCtoMML
 							{
 								for (ch = 0; ch < 8; ++ch)
 								{
-									if (voiceActive[ch] < 0 || ((value >> ch) & 1) == 0)
+									// Handle key off for the keyed off channel
+									if (((value >> ch) & 1) != 0)
 									{
-										// there's no reason to process key off twice.
-										// or process a inactive voice.
-										continue;
+										handleKeyOff();
 									}
-
-									finishCache();
-									handleNote(false);
-									resetNote();
 								}
 								break;
 							}
